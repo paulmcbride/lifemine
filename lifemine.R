@@ -16,7 +16,8 @@ cytb.syn <- c("cytb","COB","cytochrome b","cyt b")
 lth <- "600:20000"
 
 #Parulidae is a test taxon here because I know what I'm expecting to find if all goes well
-taxon_tsn <- as.numeric(get_tsn("Columbidae"))
+taxon <- "Columbidae"
+taxon_tsn <- as.numeric(get_tsn(taxon))
 all_spp <- itis_downstream(taxon_tsn,downto="Species")
 all_gen <- data.frame(genus=unique(all_spp$parentName))
 all_gen$spp.count <- lapply(all_gen$genus, function(x) length(all_spp$parentName[all_spp$parentName==x]))
@@ -69,3 +70,6 @@ for(j in 1:nrow(all_gen)) {
   all_gen$nd2[j] <-  100*length(na.omit(all_spp$nd2[all_spp$parentName==all_gen$genus[j]]))/as.numeric(all_gen$spp.count[j])
   all_gen$cytb[j] <-  100*length(na.omit(all_spp$cytb[all_spp$parentName==all_gen$genus[j]]))/as.numeric(all_gen$spp.count[j])
 }
+all_gen$genus <- as.character(all_gen$genus)
+all_gen$spp.count <- as.numeric(all_gen$spp.count)
+write.csv(all_gen,paste(taxon,".csv",sep=''),quote=F,eol="\n")
